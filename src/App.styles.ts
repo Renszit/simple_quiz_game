@@ -67,4 +67,16 @@ export const Wrapper = styled.div`
     .start {
         max-width: 200px;
     }
+
+    label {
+        color: #fff;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+
+    #difficulty {
+        margin: 20px;
+        padding: 10px;
+        border-radius: 10px;
+    }
 `

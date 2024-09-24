@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import QuestionCard from "./components/QuestionCard";
 import { Difficulty, fetchQuizQuestions, QuestionState } from "./API";
 import { GlobalStyle, Wrapper } from "./App.styles";
@@ -18,15 +18,14 @@ const App = () => {
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
+  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.EASY);
+  const [totalQuestions, setTotalQuestions] = useState(TOTAL_QUESTIONS);
 
   const startTrivia = async () => {
     setLoading(true);
     setGameOver(false);
 
-    const newQuestions = await fetchQuizQuestions(
-      TOTAL_QUESTIONS,
-      Difficulty.EASY
-    );
+    const newQuestions = await fetchQuizQuestions(TOTAL_QUESTIONS, difficulty);
 
     setQuestions(newQuestions);
     setScore(0);
@@ -64,6 +63,32 @@ const App = () => {
       <GlobalStyle />
       <Wrapper className="App">
         <h1>React Quiz</h1>
+        {gameOver && (
+          <>
+            <label htmlFor="difficulty">Select Difficulty: </label>
+
+            <select
+              id="difficulty"
+              onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+              disabled={!gameOver}
+            >
+              <option value={Difficulty.EASY}>Easy</option>
+              <option value={Difficulty.MEDIUM}>Medium</option>
+              <option value={Difficulty.HARD}>Hard</option>
+            </select>
+
+            <label htmlFor="amount">Number of Questions: </label>
+            <input
+              type="number"
+              id="amount"
+              value={totalQuestions}
+              onChange={(e) => setTotalQuestions(Number(e.target.value))}
+              disabled={!gameOver}
+              min={1}
+              max={50}
+            />
+          </>
+        )}
         {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
           <button className="start" onClick={startTrivia}>
             start
